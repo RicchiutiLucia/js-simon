@@ -47,5 +47,68 @@ function startCountDown(seconds) {
             outcomePrinter(guessedNumbers);
             clearInterval(newCountDown);
         }
-    }, 1000);
+    }, 3100);
+}
+//crea il button Play per giocare
+const playButton = document.createElement("button");
+playButton.innerHTML = "Play";
+playButton.addEventListener("click", start);
+gameContainerDom.append(playButton);
+
+//Funzione che fa partire il gioco
+function start() {
+    containerDom.classList.remove("win");
+    numbersArray = randomArrayGen(arrayLength, 1, 100);
+    gameContainerDom.innerHTML = numbersArray;
+    console.log(numbersArray);
+    startCountDown(seconds);
+}
+
+
+//Funzione che chiede in prompt i numeri e controlla se sono presenti in un array, restituisce un array con i numeri indovinati
+function askNumbers(array) {
+    
+    gameContainerDom.innerHTML = "";
+    let guessedNumbers = [];
+
+    for (let i = 0; i < array.length; i++) {
+        
+        let input = parseInt(prompt("Inserisci un numero che ti ricordi di aver visto"));
+
+        if (isInArray(input, array)) {
+            guessedNumbers.push(input);
+        }
+    }
+    return guessedNumbers;
+}
+
+//Funzione che controlla se un valore è presente in un array
+function isInArray(value, array) {
+    for (let i = 0; i < array.length; i++) {
+        if (array[i] === value) {
+            return true;
+        }
+    }
+    return false;
+}
+
+//Funzione che stampa un outcome diverso in base a quanti numeri sono stati indovinati
+function outcomePrinter(guessedNumbers){
+    let outcome = document.createElement("div");
+    const nGuessedNumbers = guessedNumbers.length;
+
+    outcome.innerHTML = "Hai indovinato ";
+    if (nGuessedNumbers == 1) {
+        outcome.innerHTML += "1 numero su " + arrayLength + ": <br> " + guessedNumbers;
+    } else if (nGuessedNumbers == arrayLength) {
+        outcome.innerHTML += nGuessedNumbers + " numeri su " + arrayLength + ": <br> " + guessedNumbers + " <br> Complimenti!";
+        containerDom.classList.add("win");
+    } else if (nGuessedNumbers > 0) {
+        outcome.innerHTML += nGuessedNumbers + " numeri su " + arrayLength + ": <br> " + guessedNumbers;
+    } else {
+        outcome.innerHTML = "Non hai indovinato nessun numero!";
+    }
+
+    outcome.innerHTML += " <br> Gioca ancora!"
+    gameContainerDom.append(outcome);
 }
